@@ -1,5 +1,6 @@
 const { verifySignUp } = require("../middleware");
 const controller = require("../controllers/auth.controller");
+const { authJwt } = require("../middleware");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -21,5 +22,26 @@ module.exports = function(app) {
 
   app.post("/api/auth/signin", controller.signin);
 
+  app.put(
+    "/api/edituser/:id",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.updateuser
+  );
+  app.delete(
+    "/api/deleteuser/:id",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.deleteuser
+  );
+  app.get(
+    "/api/allusers",
+    [authJwt.verifyToken],
+    controller.Allusers
+  );
+  app.put(
+    "/api/logout",
+    [authJwt.logout]
+  );
+
   
 };
+

@@ -85,3 +85,64 @@ exports.signin = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+exports.updateuser = (req, res) => {
+    const id = req.params.id;
+  
+    User.update(req.body, {
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "User is updated successfully."
+          });
+        } else {
+          res.send({
+            message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error updating User with id=" + id
+        });
+      });
+  };
+  exports.deleteuser = (req, res) => {
+    const id = req.params.id;
+  
+    User.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "User is deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete User with id=${id}. Maybe User was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete User with id=" + id
+        });
+      });
+  };
+  exports.Allusers = (req, res) => {
+    User.findAll()
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving users."
+        });
+      });
+  };
+  
+
+  
